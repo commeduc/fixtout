@@ -1,0 +1,30 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>test title</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ng-template #treeTemplate let-tree>
+    <div *ngFor="let item of tree">
+      <ion-accordion-group [value]="item.name" *ngIf="item.children">
+        <ion-accordion [value]="item.name" expaned>
+          <ion-item slot="header" color="light">
+            <ion-label>{{ item.name }}</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ng-container *ngTemplateOutlet="treeTemplate; context: {$implicit: item.children}"></ng-container>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <ion-item slot="header" color="light" *ngIf="!item.children" class="mb-2">
+        <ion-label>{{ item.name }}</ion-label>
+      </ion-item>
+    </div>
+  </ng-template>
+
+  <ng-container *ngTemplateOutlet="treeTemplate; context: {$implicit: tree}"></ng-container>
+</ion-content>
