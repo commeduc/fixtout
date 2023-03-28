@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_BASE_URL } from 'src/app/config'
+import { API_BASE_URL, getHeaders } from 'src/app/config'
+import { Category } from '../model/category';
 
 
 @Injectable({
@@ -21,14 +22,13 @@ export class CategoryService {
   getCategories(pageNumber: number, categoryType: string, sqlFilters: string): Observable<any> {
     let params = new HttpParams()
       .set('sortfield', 't.rowid')
-      .set('query', '')
       .set('sortorder', 'ASC')
       .set('limit', '100')
       .set('page', pageNumber.toString())
       .set('type', categoryType)
-      .set('sqlfilters', sqlFilters);
+      //.set('sqlfilters', encodeURIComponent(sqlFilters));
 
-    return this.http.get(API_BASE_URL + '/categories', { params });
+    return this.http.get(API_BASE_URL + `categories?sqlfilters=${encodeURIComponent(sqlFilters)}`, { params, headers: getHeaders(), responseType:"json" });
   }
 
   /**
@@ -37,7 +37,7 @@ export class CategoryService {
    * @returns a category
    */
   getCategoryById(categoryId: string): Observable<any> {
-    const url = `${API_BASE_URL}/categories/${categoryId}`;
+    const url = `${API_BASE_URL}categories/${categoryId}`;
     return this.http.get(url);
   }
 }
